@@ -1,0 +1,13 @@
+﻿# Локальные окружения / мусор
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Данные и логи — не должны попадать в git
+data/
+*.log
+
+# Системные файлы Windows/Mac
+.DS_Store
+Thumbs.db
