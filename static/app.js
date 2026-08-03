@@ -15,9 +15,9 @@ toggleTop.addEventListener("click", () => setDescCollapsed(true));
 toggleBottom.addEventListener("click", () => setDescCollapsed(true));
 toggleCollapsed.addEventListener("click", () => setDescCollapsed(false));
 
-// Стартовая точка карты — примерно центр Урала (Екатеринбург), просто чтобы было
-// откуда стартовать; реальную точку пользователь ставит сам.
-const DEFAULT_CENTER = [56.8389, 60.6057];
+// Стартовая точка карты по умолчанию. Реальную точку пользователь может
+// поставить кликом на карте или ввести вручную.
+const DEFAULT_CENTER = [56.838, 60.445];
 
 const map = L.map("map").setView(DEFAULT_CENTER, 6);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -89,6 +89,7 @@ function setMarker(lat, lon) {
   }
   coordsInput.value = `${lat}, ${lon}`;
 }
+setMarker(...DEFAULT_CENTER);
 
 // Клик по карте — ставим/двигаем маркер и заполняем текстовое поле
 map.on("click", (e) => {
@@ -140,7 +141,7 @@ function renderTable(data) {
 }
 
 function buildPromptText(data, selectedSpecies) {
-  const { lat, lon, labels, params_order, rows } = data;
+  const { lat, lon, region, labels, params_order, rows } = data;
 
   const header = params_order.map((k) => labels[k]).join(" | ");
   const lines = rows.map((row) => {
@@ -149,11 +150,12 @@ function buildPromptText(data, selectedSpecies) {
   });
 
   const speciesText = selectedSpecies.map((sp) => `${sp.ru} (${sp.lat})`).join(", ");
+  const regionText = region ? `регион: ${region}` : "регион по координатам не определён";
 
   return (
     `Параметры погоды по дням: Дата | ${header}\n` +
     lines.join("\n") +
-    `\n\nЭто данные погоды за последние ${rows.length} дней в точке с координатами ${lat}, ${lon} (Урал). ` +
+    `\n\nЭто данные погоды за последние ${rows.length} дней в точке с координатами ${lat}, ${lon} (${regionText}). ` +
     `Оцени вероятность созревания грибов: ${speciesText} в этой точке ` +
     `с учётом приведённых погодных условий, и через сколько дней ожидать пик плодоношения.`
   );
