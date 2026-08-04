@@ -20,10 +20,29 @@ toggleCollapsed.addEventListener("click", () => setDescCollapsed(false));
 const DEFAULT_CENTER = [56.838, 60.445];
 
 const map = L.map("map").setView(DEFAULT_CENTER, 6);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+
+// Убираем стандартный префикс атрибуции Leaflet (ссылка на leafletjs.com
+// и флаг) — оставляем только copyright-подписи самих слоёв (OSM/Esri),
+// которые обязательны по условиям использования этих тайловых сервисов.
+map.attributionControl.setPrefix("");
+
+const osmLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors",
-  maxZoom: 18,
+  maxZoom: 19,
 }).addTo(map);
+
+// Спутниковая подложка Esri World Imagery — бесплатная, без API-ключа.
+const satelliteLayer = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution: "Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, GIS User Community",
+    maxZoom: 19,
+  }
+);
+
+L.control
+  .layers({ "Схема": osmLayer, "Спутник": satelliteLayer })
+  .addTo(map);
 
 let marker = null;
 let lastWeatherData = null; // сохраняем последний ответ для кнопки "Анализ (промт)"
