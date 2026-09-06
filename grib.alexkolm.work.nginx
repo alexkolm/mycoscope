@@ -1,0 +1,50 @@
+map $http_cf_connecting_ip $client_real_ip {
+    default $http_cf_connecting_ip;
+    ""      $remote_addr;
+}
+
+limit_req_zone $client_real_ip zone=grib_zone:10m rate=6r/m;
+limit_req_zone $client_real_ip zone=grib_weather_zone:10m rate=12r/m;
+
+server {
+    listen 80;
+    server_name grib.alexkolm.work;
+
+    root /opt/grib/dist;
+    index index.html;
+
+    location /api/observations {
+        limit_req zone=grib_zone burst=3 nodelay;
+        proxy_pass http://127.0.0.1:8030;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $client_real_ip;
+        proxy_set_header X-Forwarded-For $client_real_ip;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 30s;
+        proxy_connect_timeout 10s;
+    }
+
+    # Отдельная зона: запросов больше (архив погоды можно открывать
+    # чаще, чем отправлять анкету), и таймаут больше — Open-Meteo
+    # с ретраями на бэкенде может отвечать до ~65с в худшем случае
+    # (3 попытки × 20с таймаут + паузы 1с/3с между ними), берём с запасом.
+    location /api/weather {
+        limit_req zone=grib_weather_zone burst=5 nodelay;
+        proxy_pass http://127.0.0.1:8030;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $client_real_ip;
+        proxy_set_header X-Forwarded-For $client_real_ip;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 75s;
+        proxy_connect_timeout 10s;
+    }
+
+    location /api/health {
+        proxy_pass http://127.0.0.1:8030;
+        proxy_set_header Host $host;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "grib-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Минимальный бэкенд POST /api/observations для Mycoscope/Grib",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.2",
+    "nodemailer": "^6.10.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

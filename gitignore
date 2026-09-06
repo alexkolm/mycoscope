@@ -1,0 +1,15 @@
+# --- фронтенд (grib/) ---
+grib/node_modules/
+grib/dist/
+grib/*.log
+
+# --- бэкенд (grib_api/) ---
+grib_api/node_modules/
+grib_api/.env
+grib_api/data/
+grib_api/*.log
+
+# --- общее ---
+.DS_Store
+Thumbs.db
+*.local

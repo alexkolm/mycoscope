@@ -1,0 +1,15 @@
+[
+  { "common_name_ru": "Белый гриб", "scientific_name": "Boletus edulis" },
+  { "common_name_ru": "Груздь настоящий (Сырой груздь)", "scientific_name": "Lactarius resimus" },
+  { "common_name_ru": "Лисичка обыкновенная", "scientific_name": "Cantharellus cibarius" },
+  { "common_name_ru": "Маслёнок настоящий", "scientific_name": "Suillus luteus" },
+  {
+    "common_name_ru": "Опёнок осенний",
+    "scientific_name": ["Armillaria mellea", "Armillaria borealis"]
+  },
+  { "common_name_ru": "Подберёзовик", "scientific_name": "Leccinum scabrum" },
+  { "common_name_ru": "Подгруздок белый (Сухой груздь)", "scientific_name": "Russula delica" },
+  { "common_name_ru": "Подосиновик красный", "scientific_name": "Leccinum aurantiacum" },
+  { "common_name_ru": "Рыжик настоящий", "scientific_name": "Lactarius deliciosus" },
+  { "common_name_ru": "Сыроежка пищевая", "scientific_name": "Russula vesca" }
+]
